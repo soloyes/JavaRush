@@ -1,0 +1,33 @@
+package com.javarush.task.task36.task3608.model;
+
+import com.javarush.task.task36.task3608.bean.User;
+import com.javarush.task.task36.task3608.model.service.UserServiceImpl;
+
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+
+public class FakeModel implements Model {
+    private ModelData modelData = new ModelData();
+
+    private UserServiceImpl userService;
+
+    @Override
+    public ModelData getModelData() {
+        return modelData;
+    }
+
+    @Override
+    public void loadUsers() {
+        List<User> list = new LinkedList<>(Arrays.asList(
+                new User("A", 1L, 1),
+                new User("B", 2L, 1)));
+
+        modelData.setUsers(list);
+    }
+
+    @Override
+    public void loadDeletedUsers() {
+        throw new UnsupportedOperationException();
+    }
+}

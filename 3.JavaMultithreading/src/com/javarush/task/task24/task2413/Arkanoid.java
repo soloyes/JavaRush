@@ -6,7 +6,7 @@ import java.util.ArrayList;
 /**
  * Главный класс игры
  */
-public class Arkanoid {
+public class Arkanoid{
     //ширина и высота
     private int width;
     private int height;

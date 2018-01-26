@@ -8,7 +8,7 @@ import java.awt.event.ActionListener;
 public class ClientGuiView {
     private final ClientGuiController controller;
 
-    private JFrame frame = new JFrame("Чат");
+    private JFrame frame = new JFrame("Chat");
     private JTextField textField = new JTextField(50);
     private JTextArea messages = new JTextArea(10, 50);
     private JTextArea users = new JTextArea(10, 10);
@@ -41,8 +41,8 @@ public class ClientGuiView {
     public String getServerAddress() {
         return JOptionPane.showInputDialog(
                 frame,
-                "Введите адрес сервера:",
-                "Конфигурация клиента",
+                "Input server address:",
+                "Client configuration",
                 JOptionPane.QUESTION_MESSAGE);
     }
 
@@ -50,16 +50,16 @@ public class ClientGuiView {
         while (true) {
             String port = JOptionPane.showInputDialog(
                     frame,
-                    "Введите порт сервера:",
-                    "Конфигурация клиента",
+                    "Input server port:",
+                    "Client configuration",
                     JOptionPane.QUESTION_MESSAGE);
             try {
                 return Integer.parseInt(port.trim());
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(
                         frame,
-                        "Был введен некорректный порт сервера. Попробуйте еще раз.",
-                        "Конфигурация клиента",
+                        "Port incorrect, try again!",
+                        "Client configuration",
                         JOptionPane.ERROR_MESSAGE);
             }
         }
@@ -68,8 +68,8 @@ public class ClientGuiView {
     public String getUserName() {
         return JOptionPane.showInputDialog(
                 frame,
-                "Введите ваше имя:",
-                "Конфигурация клиента",
+                "Input name:",
+                "Client configuration",
                 JOptionPane.QUESTION_MESSAGE);
     }
 
@@ -78,14 +78,14 @@ public class ClientGuiView {
         if (clientConnected) {
             JOptionPane.showMessageDialog(
                     frame,
-                    "Соединение с сервером установлено",
-                    "Чат",
+                    "Connected!",
+                    "Chat",
                     JOptionPane.INFORMATION_MESSAGE);
         } else {
             JOptionPane.showMessageDialog(
                     frame,
-                    "Клиент не подключен к серверу",
-                    "Чат",
+                    "Not connected",
+                    "Chat",
                     JOptionPane.ERROR_MESSAGE);
         }
 

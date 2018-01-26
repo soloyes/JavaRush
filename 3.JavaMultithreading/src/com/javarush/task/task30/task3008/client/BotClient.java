@@ -26,7 +26,7 @@ public class BotClient extends Client {
     public class BotSocketThread extends Client.SocketThread{
         @Override
         protected void clientMainLoop() throws IOException, ClassNotFoundException {
-            sendTextMessage("Привет чатику. Я бот. Понимаю команды: дата, день, месяц, год, время, час, минуты, секунды.");
+            sendTextMessage("Hi, im bot. Accepted commands: date, day, month, year, time, hour, minutes, seconds.");
             super.clientMainLoop();
         }
 
@@ -38,35 +38,35 @@ public class BotClient extends Client {
             if (data.length == 2) {
                 String userQuestion = data[1];
                 switch (userQuestion) {
-                    case "дата":
+                    case "date":
                         dateFormat = new SimpleDateFormat("d.MM.YYYY");
                         break;
-                    case "день":
+                    case "day":
                         dateFormat = new SimpleDateFormat("d");
                         break;
-                    case "месяц":
+                    case "month":
                         dateFormat = new SimpleDateFormat("MMMM");
                         break;
-                    case "год":
+                    case "year":
                         dateFormat = new SimpleDateFormat("YYYY");
                         break;
-                    case "время":
+                    case "time":
                         dateFormat = new SimpleDateFormat("H:mm:ss");
                         break;
-                    case "час":
+                    case "hour":
                         dateFormat = new SimpleDateFormat("H");
                         break;
-                    case "минуты":
+                    case "minutes":
                         dateFormat = new SimpleDateFormat("m");
                         break;
-                    case "секунды":
+                    case "seconds":
                         dateFormat = new SimpleDateFormat("s");
                         break;
                 }
             }
             if (dateFormat != null) {
                 String dateString = dateFormat.format(Calendar.getInstance().getTime());
-                String botAnswer = String.format("Информация для %s: %s", data[0], dateString);
+                String botAnswer = String.format("Info to %s: %s", data[0], dateString);
                 sendTextMessage(botAnswer);
             }
         }

@@ -14,15 +14,18 @@ public class Client {
 
     private volatile boolean clientConnected = false;
 
-    protected String getServerAddress(){
+    protected String getServerAddress() {
+        ConsoleHelper.writeMessage("Input server address:");
         return ConsoleHelper.readString();
     }
 
     protected int getServerPort(){
+        ConsoleHelper.writeMessage("Input server port:");
         return ConsoleHelper.readInt();
     }
 
     protected String getUserName(){
+        ConsoleHelper.writeMessage("Input name:");
         return ConsoleHelper.readString();
     }
 
@@ -40,7 +43,7 @@ public class Client {
             connection.send(send);
         } catch (IOException e) {
             clientConnected = false;
-            ConsoleHelper.writeMessage("Error with sendTextMessage");
+            ConsoleHelper.writeMessage("Error with message sent");
         }
     }
 
@@ -56,16 +59,17 @@ public class Client {
                 ConsoleHelper.writeMessage("Interrupted");
             }
         }
+
         if (clientConnected)
-            ConsoleHelper.writeMessage("Соединение установлено. Для выхода наберите команду 'exit'.");
-        else
-        {
-            ConsoleHelper.writeMessage("Произошла ошибка во время работы клиента.");
+            ConsoleHelper.writeMessage("Connected. Type 'exit' to exit.");
+        else {
+            ConsoleHelper.writeMessage("Client working error.");
             return;
         }
+
         for(;clientConnected;){
             String s = ConsoleHelper.readString();
-            if (s.equals("exit")) break;
+            if (s.equals("exit")) return;
             if (shouldSendTextFromConsole()){
                 sendTextMessage(s);
             }
@@ -95,10 +99,9 @@ public class Client {
         protected void clientHandshake() throws IOException, ClassNotFoundException{
             for (;;){
                 Message receive = connection.receive();
-
                 if (receive.getType() == MessageType.NAME_REQUEST){
-                    String name = getUserName();
-                    Message send = new Message(MessageType.USER_NAME, name);
+                    String userName = getUserName();
+                    Message send = new Message(MessageType.USER_NAME, userName);
                     connection.send(send);
                 }
                 else if (receive.getType() == MessageType.NAME_ACCEPTED){

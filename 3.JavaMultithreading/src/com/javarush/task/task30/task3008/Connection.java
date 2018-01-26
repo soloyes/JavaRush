@@ -31,10 +31,6 @@ public class Connection implements Closeable{
             return (Message) in.readObject();
         }
     }
-
-//    public SocketAddress getRemoteSocketAddress(){
-//        return socket.getRemoteSocketAddress();
-//    }
     
     @Override
     public void close() throws IOException{

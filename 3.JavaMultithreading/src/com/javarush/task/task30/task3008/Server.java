@@ -11,28 +11,22 @@ public class Server {
     private static Map<String, Connection> connectionMap = new ConcurrentHashMap<>();
 
     public static void main(String[] args) {
-        ServerSocket serverSocket = null;
+        System.out.println("Input server port:");
         int port = ConsoleHelper.readInt();
-        try {
-            serverSocket = new ServerSocket(port);
+
+        try (ServerSocket serverSocket = new ServerSocket(port)) {
             ConsoleHelper.writeMessage("Server started");
             for (;;){
                 Socket socket = serverSocket.accept();
                 new Handler(socket).start();
             }
         } catch (IOException e) {
+            ConsoleHelper.writeMessage("Error with server start");
             e.printStackTrace();
-        }
-        finally {
-            try {
-                serverSocket.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
     }
 
-    public static void sendBroadcastMessage(Message message){
+    static void sendBroadcastMessage(Message message){
         for (Map.Entry<String, Connection> entry:connectionMap.entrySet()) {
             try {
                 entry.getValue().send(message);
@@ -45,40 +39,41 @@ public class Server {
     private static class Handler extends Thread{
         private Socket socket;
 
-        public Handler(Socket socket) {
+        Handler(Socket socket) {
             this.socket = socket;
         }
 
         private String serverHandshake(Connection connection)
                 throws IOException, ClassNotFoundException {
 
-            String data = null;
+            String userName;
             for (;;) {
 
                 connection.send(new Message(MessageType.NAME_REQUEST));
                 Message receive = connection.receive();
-                MessageType messageType = receive.getType();
-                data = receive.getData();
+                userName = receive.getData();
 
-                if (messageType != MessageType.USER_NAME) continue;
-                if (data.isEmpty()) continue;
-                if (connectionMap.get(data) != null) continue;
+                if (receive.getType() != MessageType.USER_NAME) continue;
+                if (userName.isEmpty()) continue;
+                if (connectionMap.get(userName) != null) continue;
 
-                connectionMap.put(data, connection);
+                connectionMap.put(userName, connection);
                 connection.send(new Message(MessageType.NAME_ACCEPTED));
                 break;
             }
-            return data;
+            return userName;
         }
 
         private void sendListOfUsers(Connection connection, String userName){
             for (Map.Entry<String, Connection> entry:connectionMap.entrySet()){
-                if (!entry.getKey().equals(userName))
+                if (!entry.getKey().equals(userName)) {
                     try {
                         connection.send(new Message(MessageType.USER_ADDED, entry.getKey()));
                     } catch (IOException e) {
+                        ConsoleHelper.writeMessage("Error with message send");
                         e.printStackTrace();
                     }
+                }
             }
         }
 
@@ -87,14 +82,14 @@ public class Server {
 
             for (;;){
                 Message receive = connection.receive();
-                MessageType messageType = receive.getType();
+                String msg = receive.getData();
 
-                if (messageType != MessageType.TEXT) {
-                    ConsoleHelper.writeMessage("Error with message send");
+                if (receive.getType() != MessageType.TEXT) {
+                    ConsoleHelper.writeMessage("Error with message type");
                     continue;
                 }
 
-                Message send = new Message(MessageType.TEXT, userName + ": " + receive.getData());
+                Message send = new Message(MessageType.TEXT, userName + ": " + msg);
                 sendBroadcastMessage(send);
             }
         }
